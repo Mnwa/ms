@@ -5,12 +5,12 @@ use regex::{Captures, Regex};
 use std::fmt::Formatter;
 use std::str::FromStr;
 
-const SECOND: f64 = 1000.;
-const MINUTE: f64 = SECOND * 60.;
-const HOUR: f64 = MINUTE * 60.;
-const DAY: f64 = HOUR * 24.;
-const WEEK: f64 = DAY * 7.;
-const YEAR: f64 = DAY * 365.25;
+const SECOND: f64 = 1000_f64;
+const MINUTE: f64 = SECOND * 60_f64;
+const HOUR: f64 = MINUTE * 60_f64;
+const DAY: f64 = HOUR * 24_f64;
+const WEEK: f64 = DAY * 7_f64;
+const YEAR: f64 = DAY * 365.25_f64;
 
 lazy_static! {
     static ref REG: Regex = Regex::new(r"^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$").unwrap();
@@ -19,7 +19,7 @@ lazy_static! {
 #[inline]
 pub fn ms<T: ToString>(data: T) -> Result<f64, Error> {
     let str = &data.to_string();
-    if str.len() > 100 {
+    if str.len() > std::f64::MAX as usize {
         return Err(Error::new("string contains more than 100 chars"));
     }
 
