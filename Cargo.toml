@@ -7,10 +7,10 @@ description = "Fast converter various time formats into milliseconds."
 license="MIT"
 keywords = ["ms", "milliseconds", "converter"]
 categories = ["date-and-time"]
-readme = "Readme.md"
-documentation = "https://github.com/nesso99/ms-rust"
-homepage = "https://github.com/nesso99/ms-rust"
-repository = "https://github.com/nesso99/ms-rust"
+readme = "README.md"
+documentation = "https://github.com/Mnwa/ms"
+homepage = "https://github.com/Mnwa/ms"
+repository = "https://github.com/Mnwa/ms"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
