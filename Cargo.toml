@@ -1,0 +1,19 @@
+[package]
+name = "ms-converter"
+version = "0.1.0"
+authors = ["Mnwa <mihan@panfilov.biz>"]
+edition = "2018"
+description = "Fast converter various time formats into milliseconds."
+license="MIT"
+keywords = ["ms", "milliseconds", "converter"]
+categories = ["date-and-time"]
+readme = "Readme.md"
+documentation = "https://github.com/nesso99/ms-rust"
+homepage = "https://github.com/nesso99/ms-rust"
+repository = "https://github.com/nesso99/ms-rust"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1"
+lazy_static = "1"
