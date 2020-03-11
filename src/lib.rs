@@ -16,12 +16,18 @@ lazy_static! {
     static ref REG: Regex = Regex::new(r"^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$").unwrap();
 }
 
+/// Convert time string to a milliseconds
+///
+/// Example:
+/// ```
+/// use crate::ms_converter::ms;
+///
+/// let value = ms("1d").unwrap();
+/// assert_eq!(value, 86400000.)
+/// ```
 #[inline]
 pub fn ms<T: ToString>(data: T) -> Result<f64, Error> {
     let str = &data.to_string();
-    if str.len() > std::f64::MAX as usize {
-        return Err(Error::new("string contains more than 100 chars"));
-    }
 
     let captures: Captures = REG
         .captures(str)
