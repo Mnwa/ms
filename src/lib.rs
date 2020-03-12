@@ -1,3 +1,6 @@
+#![feature(test)]
+extern crate test;
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -25,10 +28,7 @@ lazy_static! {
 /// let value = ms("1d").unwrap();
 /// assert_eq!(value, 86400000.)
 /// ```
-#[inline]
-pub fn ms<T: ToString>(data: T) -> Result<f64, Error> {
-    let str = &data.to_string();
-
+pub fn ms(str: &str) -> Result<f64, Error> {
     let captures: Captures = REG
         .captures(str)
         .map_or(Err(Error::new("fail to parse input")), |captures| {

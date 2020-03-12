@@ -1,4 +1,5 @@
 use crate::ms;
+use test::Bencher;
 
 #[test]
 fn ms_1d() {
@@ -28,4 +29,9 @@ fn ms_neg_ms() {
 fn ms_invalid_postfix() {
     let value = ms("100 xs").is_err();
     assert_eq!(value, true)
+}
+
+#[bench]
+fn bench_add_two(b: &mut Bencher) {
+    b.iter(|| ms("2.5 hrs"));
 }
