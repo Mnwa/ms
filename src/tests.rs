@@ -1,5 +1,4 @@
 use crate::ms;
-use test::Bencher;
 
 #[test]
 fn ms_1d() {
