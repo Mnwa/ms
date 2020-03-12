@@ -1,4 +1,8 @@
 # MS library
+[![](https://docs.rs/ms-converter/badge.svg)](https://docs.rs/ms-converter/)
+![Rust](https://github.com/Mnwa/ms/workflows/Rust/badge.svg?branch=master)
+[![](https://img.shields.io/crates/v/ms-converter.svg)](https://crates.io/crates/ms-converter)
+[![](https://img.shields.io/crates/d/ms-converter.svg)](https://crates.io/crates/ms-converter)
 
 Fast converter various time formats into milliseconds.
 Like are `1d` to `86400000`
