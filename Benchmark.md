@@ -4,11 +4,11 @@ There is diff between `ms` library and `ms-converter`
 ## Perfomance diff
 ```text
 running 2 tests
-test tests::bench_ms_converter ... bench:          29 ns/iter (+/- 3)
-test tests::bench_ms_second    ... bench:     308,373 ns/iter (+/- 51,013)
+test tests::bench_ms_converter ... bench:          27 ns/iter (+/- 2)
+test tests::bench_ms_second    ... bench:     302,158 ns/iter (+/- 62,937)
 ```
 
-`ms_converter` is faster than `ms` by more than 10633 times!
+`ms_converter` is faster than `ms` by more than 11191 times!
 
 ## Environment
 * OS `macOs catalina 10.15.3`
