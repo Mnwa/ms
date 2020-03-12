@@ -1,6 +1,3 @@
-#![feature(test)]
-extern crate test;
-
 use std::fmt::Formatter;
 use std::str::FromStr;
 

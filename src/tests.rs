@@ -30,8 +30,3 @@ fn ms_invalid_postfix() {
     let value = ms("100 xs").is_err();
     assert_eq!(value, true)
 }
-
-#[bench]
-fn bench_add_two(b: &mut Bencher) {
-    b.iter(|| ms("2.5 hrs"));
-}

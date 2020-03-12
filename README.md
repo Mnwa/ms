@@ -37,7 +37,7 @@ assert_eq!(value, 86400000_f64)
 ### Unit tests
 
 ```bash
-cargo +nightly test
+cargo test
 ```
 
 ### Coding style tests
@@ -45,7 +45,7 @@ cargo +nightly test
 Running code style tests
 
 ```
-cargo +nightly fmt --all -- --check
+cargo fmt --all -- --check
 ```
 
 ## Contributing
