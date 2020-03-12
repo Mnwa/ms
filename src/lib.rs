@@ -3,7 +3,6 @@
 #![doc(html_root_url = "https://docs.rs/ms-converter/")]
 
 use std::fmt::Formatter;
-use std::str::FromStr;
 
 const SECOND: f64 = 1000_f64;
 const MINUTE: f64 = SECOND * 60_f64;
@@ -21,56 +20,28 @@ const YEAR: f64 = DAY * 365.25_f64;
 /// let value = ms("1d").unwrap();
 /// assert_eq!(value, 86400000.)
 /// ```
-pub fn ms(str: &str) -> Result<f64, Error> {
-    let postfix = str.parse::<DatePostfixes>()?;
+pub fn ms(s: &str) -> Result<f64, Error> {
+    let value_count = s
+        .chars()
+        .take_while(|c| c >= &'0' && c <= &'9' || c == &'.' || c == &'-')
+        .count();
 
-    Ok(match postfix {
-        DatePostfixes::Year(v) => v * YEAR,
-        DatePostfixes::Week(v) => v * WEEK,
-        DatePostfixes::Day(v) => v * DAY,
-        DatePostfixes::Hour(v) => v * HOUR,
-        DatePostfixes::Minute(v) => v * MINUTE,
-        DatePostfixes::Second(v) => v * SECOND,
-        DatePostfixes::Millisecond(v) => v,
-    })
-}
+    let (value, postfix) = s.split_at(value_count);
 
-#[derive(Debug)]
-enum DatePostfixes {
-    Year(f64),
-    Week(f64),
-    Day(f64),
-    Hour(f64),
-    Minute(f64),
-    Second(f64),
-    Millisecond(f64),
-}
+    let value = value
+        .parse::<f64>()
+        .map_or(Err(Error::new("invalid value")), |v| Ok(v))?;
+    let postfix = postfix.trim();
 
-impl FromStr for DatePostfixes {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let value_count = s
-            .chars()
-            .take_while(|c| c >= &'0' && c <= &'9' || c == &'.' || c == &'-')
-            .count();
-        let (value, postfix) = s.split_at(value_count);
-        let value = value
-            .parse::<f64>()
-            .map_or(Err(Error::new("invalid value")), |v| Ok(v))?;
-
-        match postfix.trim() {
-            "years" | "year" | "yrs" | "yr" | "y" => Ok(DatePostfixes::Year(value)),
-            "weeks" | "week" | "w" => Ok(DatePostfixes::Week(value)),
-            "days" | "day" | "d" => Ok(DatePostfixes::Day(value)),
-            "hours" | "hour" | "hrs" | "hr" | "h" => Ok(DatePostfixes::Hour(value)),
-            "minutes" | "minute" | "mins" | "min" | "m" => Ok(DatePostfixes::Minute(value)),
-            "seconds" | "second" | "secs" | "sec" | "s" => Ok(DatePostfixes::Second(value)),
-            "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => {
-                Ok(DatePostfixes::Millisecond(value))
-            }
-            _ => Err(Error::new("invalid postfix")),
-        }
+    match postfix {
+        "years" | "year" | "yrs" | "yr" | "y" => Ok(value * YEAR),
+        "weeks" | "week" | "w" => Ok(value * WEEK),
+        "days" | "day" | "d" => Ok(value * DAY),
+        "hours" | "hour" | "hrs" | "hr" | "h" => Ok(value * HOUR),
+        "minutes" | "minute" | "mins" | "min" | "m" => Ok(value * MINUTE),
+        "seconds" | "second" | "secs" | "sec" | "s" => Ok(value * SECOND),
+        "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => Ok(value),
+        _ => Err(Error::new("invalid postfix")),
     }
 }
 
