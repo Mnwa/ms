@@ -8,7 +8,7 @@ license="MIT"
 keywords = ["ms", "milliseconds", "converter"]
 categories = ["date-and-time"]
 readme = "README.md"
-documentation = "https://github.com/Mnwa/ms"
+documentation = "https://docs.rs/ms-converter/"
 homepage = "https://github.com/Mnwa/ms"
 repository = "https://github.com/Mnwa/ms"
 
