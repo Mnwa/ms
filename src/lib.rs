@@ -1,3 +1,7 @@
+#![doc = "Fast converter various time formats into milliseconds."]
+#![doc(issue_tracker_base_url = "https://github.com/Mnwa/ms/issues/")]
+#![doc(html_root_url = "https://docs.rs/ms-converter/")]
+
 use std::fmt::Formatter;
 use std::str::FromStr;
 
