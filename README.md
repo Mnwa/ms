@@ -5,16 +5,6 @@ Like are `1d` to `86400000`
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-For use this lib you need Rust and Cargo on local machine
-
-```
-Give examples
-```
-
 ### Usage
 Add this to your Cargo.toml:
 
@@ -31,6 +21,9 @@ use crate::ms_converter::ms;
 let value = ms("1d").unwrap();
 assert_eq!(value, 86400000_f64)
 ```
+
+## Performance
+You can check performance diff between `ms_converter` and `ms` libraries [here](Benchmark.md).
 
 ## Running the tests
 
