@@ -23,7 +23,7 @@ ms-converter = "0.4"
 use crate::ms_converter::ms;
 
 let value = ms("1d").unwrap();
-assert_eq!(value, 86400000_f64)
+assert_eq!(value, 86400000)
 ```
 
 ## Performance
