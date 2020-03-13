@@ -1,6 +1,6 @@
 # MS library
 [![](https://docs.rs/ms-converter/badge.svg)](https://docs.rs/ms-converter/)
-![build](https://github.com/Mnwa/ms/workflows/build/badge.svg?branch=master)
+[![](https://github.com/Mnwa/ms/workflows/build/badge.svg?branch=master)](https://github.com/Mnwa/ms/actions?query=workflow%3Abuild)
 [![](https://img.shields.io/crates/v/ms-converter.svg)](https://crates.io/crates/ms-converter)
 [![](https://img.shields.io/crates/d/ms-converter.svg)](https://crates.io/crates/ms-converter)
 
