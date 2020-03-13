@@ -18,9 +18,9 @@ const YEAR: f64 = DAY * 365.25_f64;
 /// use crate::ms_converter::ms;
 ///
 /// let value = ms("1d").unwrap();
-/// assert_eq!(value, 86400000.)
+/// assert_eq!(value, 86400000)
 /// ```
-pub fn ms(s: &str) -> Result<f64, Error> {
+pub fn ms(s: &str) -> Result<i64, Error> {
     let value_count = s
         .chars()
         .take_while(|c| c >= &'0' && c <= &'9' || c == &'.' || c == &'-')
@@ -33,16 +33,18 @@ pub fn ms(s: &str) -> Result<f64, Error> {
         .map_or(Err(Error::new("invalid value")), |v| Ok(v))?;
     let postfix = postfix.trim();
 
-    match postfix {
-        "years" | "year" | "yrs" | "yr" | "y" => Ok(value * YEAR),
-        "weeks" | "week" | "w" => Ok(value * WEEK),
-        "days" | "day" | "d" => Ok(value * DAY),
-        "hours" | "hour" | "hrs" | "hr" | "h" => Ok(value * HOUR),
-        "minutes" | "minute" | "mins" | "min" | "m" => Ok(value * MINUTE),
-        "seconds" | "second" | "secs" | "sec" | "s" => Ok(value * SECOND),
-        "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => Ok(value),
-        _ => Err(Error::new("invalid postfix")),
-    }
+    let ret = match postfix {
+        "years" | "year" | "yrs" | "yr" | "y" => value * YEAR,
+        "weeks" | "week" | "w" => value * WEEK,
+        "days" | "day" | "d" => value * DAY,
+        "hours" | "hour" | "hrs" | "hr" | "h" => value * HOUR,
+        "minutes" | "minute" | "mins" | "min" | "m" => value * MINUTE,
+        "seconds" | "second" | "secs" | "sec" | "s" => value * SECOND,
+        "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => value,
+        _ => return Err(Error::new("invalid postfix")),
+    };
+
+    Ok(ret.round() as i64)
 }
 
 #[derive(Debug)]
