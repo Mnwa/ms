@@ -20,6 +20,7 @@ const YEAR: f64 = DAY * 365.25_f64;
 /// let value = ms("1d").unwrap();
 /// assert_eq!(value, 86400000)
 /// ```
+#[inline]
 pub fn ms(s: &str) -> Result<i64, Error> {
     let value_count = s
         .chars()
