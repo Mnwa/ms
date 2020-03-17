@@ -1,9 +1,9 @@
 [package]
 name = "ms-converter"
-version = "0.5.1"
+version = "0.6.0"
 authors = ["Mnwa <mihan@panfilov.biz>"]
 edition = "2018"
-description = "Fast converter various time formats into milliseconds."
+description = "Fast abstraction for converting human-like times into milliseconds."
 license="MIT"
 keywords = ["ms", "milliseconds", "converter"]
 categories = ["date-and-time"]

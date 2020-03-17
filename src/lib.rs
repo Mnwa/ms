@@ -11,7 +11,8 @@ const DAY: f64 = HOUR * 24_f64;
 const WEEK: f64 = DAY * 7_f64;
 const YEAR: f64 = DAY * 365.25_f64;
 
-/// Convert time string to a milliseconds
+/// Fast abstraction for converting human-like times into milliseconds.
+/// `ms` function gets an str slice and returns how much milliseconds in your pattern.
 ///
 /// Example:
 /// ```
@@ -46,6 +47,58 @@ pub fn ms(s: &str) -> Result<i64, Error> {
     };
 
     Ok(ret.round() as i64)
+}
+
+/// Zero cost converter from human-like time into a number.
+/// In the first argument, you need to pass type of your number (`i64`, `f64` and etc).
+/// The second argument is human-time construction, like `1 day`, `2 h`.
+/// The output will be a number with type what you set in the first argument.
+///
+/// This macro will be precalculated in compilation time. Also, you can use ms_expr with constants:
+///
+/// ```
+/// use crate::ms_converter::ms_expr;
+///
+/// const VALUE: f64 = ms_expr!(f64, 2.5 hrs);
+/// assert_eq!(VALUE, 9000000.)
+/// ```
+///
+/// Example:
+/// ```
+/// use crate::ms_converter::ms_expr;
+///
+/// assert_eq!(ms_expr!(i64, 1 d), 86400000)
+/// ```
+#[macro_export]
+macro_rules! ms_expr {
+    ($type:ty, $x:literal $(milliseconds)?$(millisecond)?$(msecs)?$(msec)?$(ms)?) => {{
+        let x: $type = $x;
+        x
+    }};
+    ($type:ty, $x:literal $(seconds)?$(second)?$(secs)?$(sec)?$(s)?) => {{
+        let x: $type = $x * ($crate::SECOND as $type);
+        x
+    }};
+    ($type:ty, $x:literal $(minutes)?$(minute)?$(mins)?$(min)?$(m)?) => {{
+        let x: $type = $x * ($crate::MINUTE as $type);
+        x
+    }};
+    ($type:ty, $x:literal $(hours)?$(hour)?$(hrs)?$(hr)?$(h)?) => {{
+        let x: $type = $x * ($crate::HOUR as $type);
+        x
+    }};
+    ($type:ty, $x:literal $(days)?$(day)?$(d)?) => {{
+        let x: $type = $x * ($crate::DAY as $type);
+        x
+    }};
+    ($type:ty, $x:literal $(weeks)?$(week)?$(w)?) => {{
+        let x: $type = $x * ($crate::WEEK as $type);
+        x
+    }};
+    ($type:ty, $x:literal $(years)?$(year)?$(yrs)?$(yr)?$(y)?) => {{
+        let x: $type = $x * ($crate::YEAR as $type);
+        x
+    }};
 }
 
 #[derive(Debug)]

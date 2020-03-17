@@ -1,11 +1,15 @@
-# MS library
+# MS converter library
 [![](https://docs.rs/ms-converter/badge.svg)](https://docs.rs/ms-converter/)
 [![](https://github.com/Mnwa/ms/workflows/build/badge.svg?branch=master)](https://github.com/Mnwa/ms/actions?query=workflow%3Abuild)
 [![](https://img.shields.io/crates/v/ms-converter.svg)](https://crates.io/crates/ms-converter)
 [![](https://img.shields.io/crates/d/ms-converter.svg)](https://crates.io/crates/ms-converter)
 
-Fast converter various time formats into milliseconds.
-Like are `1d` to `86400000`
+Fast abstraction for converting human-like times into milliseconds.
+Like, are `1d` to `86400000`.
+
+There are two ways to calculate milliseconds:
+* In the runtime `crate::ms_converter::ms`
+* In the compilation time `crate::ms_converter::ms_expr`
 
 ## Getting Started
 
@@ -14,11 +18,12 @@ Add this to your Cargo.toml:
 
 ```toml
 [dependencies]
-ms-converter = "0.5"
+ms-converter = "0.6"
 ```
 
-### Example
+### Examples
 
+#### Running ms converter in Runtime:
 ```rust
 use crate::ms_converter::ms;
 
@@ -26,8 +31,18 @@ let value = ms("1d").unwrap();
 assert_eq!(value, 86400000)
 ```
 
+#### Convert ms in the compilation step:
+```rust
+use crate::ms_converter::ms_expr;
+
+const VALUE: i64 = ms_expr!(f64, 1 d);
+assert_eq!(VALUE, 86400000)
+```
+
 ## Performance
-You can check performance diff between `ms_converter` and `ms` libraries [here](Benchmark.md).
+You can check the performance diff between `ms_converter` and `ms` libraries [here](Benchmark.md).
+
+Also, the macro has no time in the runtime! It will be converted into the const value.
 
 ## Running the tests
 
