@@ -35,7 +35,7 @@ assert_eq!(value, 86400000)
 ```rust
 use crate::ms_converter::ms_expr;
 
-const VALUE: i64 = ms_expr!(f64, 1 d);
+const VALUE: i64 = ms_expr!(i64, 1 d);
 assert_eq!(VALUE, 86400000)
 ```
 
