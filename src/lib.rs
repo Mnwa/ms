@@ -4,12 +4,12 @@
 
 use std::fmt::Formatter;
 
-const SECOND: f64 = 1000_f64;
-const MINUTE: f64 = SECOND * 60_f64;
-const HOUR: f64 = MINUTE * 60_f64;
-const DAY: f64 = HOUR * 24_f64;
-const WEEK: f64 = DAY * 7_f64;
-const YEAR: f64 = DAY * 365.25_f64;
+pub const SECOND: f64 = 1000_f64;
+pub const MINUTE: f64 = SECOND * 60_f64;
+pub const HOUR: f64 = MINUTE * 60_f64;
+pub const DAY: f64 = HOUR * 24_f64;
+pub const WEEK: f64 = DAY * 7_f64;
+pub const YEAR: f64 = DAY * 365.25_f64;
 
 /// Fast abstraction for converting human-like times into milliseconds.
 /// `ms` function gets an str slice and returns how much milliseconds in your pattern.
