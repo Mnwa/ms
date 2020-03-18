@@ -18,7 +18,7 @@ Add this to your Cargo.toml:
 
 ```toml
 [dependencies]
-ms-converter = "0.6"
+ms-converter = "0.7"
 ```
 
 ### Examples
