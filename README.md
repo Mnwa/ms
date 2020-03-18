@@ -39,6 +39,14 @@ const VALUE: i64 = ms_expr!(i64, 1 d);
 assert_eq!(VALUE, 86400000)
 ```
 
+#### Convert ms into `time.Duration`
+```rust
+use crate::ms_converter::ms_into_time;
+
+let value = ms_into_time("1d").unwrap();
+assert_eq!(value.as_millis(), 86400000)
+```
+
 ## Performance
 You can check the performance diff between `ms_converter` and `ms` libraries [here](Benchmark.md).
 

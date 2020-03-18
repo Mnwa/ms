@@ -1,4 +1,4 @@
-use crate::ms;
+use crate::{ms, ms_into_time};
 
 #[test]
 fn ms_1d() {
@@ -52,4 +52,34 @@ fn ms_macro_2_5h() {
 fn ms_macro_neg_ms() {
     const VALUE: i64 = ms_expr!(i64, -100);
     assert_eq!(VALUE, -100)
+}
+
+#[test]
+fn ms_into_time_1d() {
+    let value = ms_into_time("1d").unwrap();
+    assert_eq!(value.as_millis(), 86400000)
+}
+
+#[test]
+fn ms_into_time_2d() {
+    let value = ms_into_time("2 days").unwrap();
+    assert_eq!(value.as_millis(), 172800000)
+}
+
+#[test]
+fn ms_into_time_2_5h() {
+    let value = ms_into_time("2.5 hrs").unwrap();
+    assert_eq!(value.as_millis(), 9000000)
+}
+
+#[test]
+fn ms_into_time_neg_ms() {
+    let value = ms_into_time("-100").is_err();
+    assert_eq!(value, true)
+}
+
+#[test]
+fn ms_into_time_invalid_postfix() {
+    let value = ms_into_time("100 xs").is_err();
+    assert_eq!(value, true)
 }

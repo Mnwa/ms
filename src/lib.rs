@@ -3,6 +3,7 @@
 #![doc(html_root_url = "https://docs.rs/ms-converter/")]
 
 use std::fmt::Formatter;
+use std::time::Duration;
 
 pub const SECOND: f64 = 1000_f64;
 pub const MINUTE: f64 = SECOND * 60_f64;
@@ -99,6 +100,31 @@ macro_rules! ms_expr {
         let x: $type = $x * ($crate::YEAR as $type);
         x
     }};
+}
+
+/// Ms into time is the abstraction on `ms` function, which converts result into `time.Duration` type.
+/// `ms_into_time` function gets an str slice and returns `time.Duration`.
+/// `ms_into_time` has some limitations, it's not working with negative values:
+/// ```
+/// use crate::ms_converter::ms_into_time;
+///
+/// let value = ms_into_time("-1d").is_err();
+/// assert_eq!(value, true)
+/// ```
+///
+/// Example:
+/// ```
+/// use crate::ms_converter::ms_into_time;
+///
+/// let value = ms_into_time("1d").unwrap();
+/// assert_eq!(value.as_millis(), 86400000)
+/// ```
+pub fn ms_into_time(s: &str) -> Result<Duration, Error> {
+    let milliseconds = ms(s)?;
+    if milliseconds < 0 {
+        return Err(Error::new("Time Duration cannot work with negative values"));
+    }
+    Ok(Duration::from_millis(milliseconds as u64))
 }
 
 #[derive(Debug)]
