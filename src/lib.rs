@@ -5,11 +5,17 @@
 use std::fmt::Formatter;
 use std::time::Duration;
 
+/// How many milliseconds in one second
 pub const SECOND: f64 = 1000_f64;
+/// How many milliseconds in one minute
 pub const MINUTE: f64 = SECOND * 60_f64;
+/// How many milliseconds in one hour
 pub const HOUR: f64 = MINUTE * 60_f64;
+/// How many milliseconds in one day
 pub const DAY: f64 = HOUR * 24_f64;
+/// How many milliseconds in one week
 pub const WEEK: f64 = DAY * 7_f64;
+/// How many milliseconds in one year
 pub const YEAR: f64 = DAY * 365.25_f64;
 
 /// Fast abstraction for converting human-like times into milliseconds.
@@ -127,6 +133,7 @@ pub fn ms_into_time(s: &str) -> Result<Duration, Error> {
     Ok(Duration::from_millis(milliseconds as u64))
 }
 
+/// Error what return ms converter functions in runtime, if something is going wrong.
 #[derive(Debug)]
 pub struct Error {
     message: &'static str,
