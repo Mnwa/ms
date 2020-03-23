@@ -30,31 +30,25 @@ pub const YEAR: f64 = DAY * 365.25_f64;
 /// ```
 #[inline(always)]
 pub fn ms(s: &str) -> Result<i64, Error> {
-    let value_count = s
-        .bytes()
-        .take_while(|c| (b'0'..=b'9').contains(c) || c == &b'.' || c == &b'-')
-        .count();
-
-    let (value, postfix) = s.split_at(value_count);
-
-    let value: f64 = value
-        .parse()
-        .map_or(Err(Error::new("invalid value")), |v| Ok(v))?;
+    let (value, postfix) = s
+        .find(|c: char| !matches!(c, '0'..='9' | '.' | '-'))
+        .map_or((s, ""), move |vi| s.split_at(vi));
 
     let postfix = postfix.trim();
-
-    let ret = match postfix {
-        "years" | "year" | "yrs" | "yr" | "y" => value * YEAR,
-        "weeks" | "week" | "w" => value * WEEK,
-        "days" | "day" | "d" => value * DAY,
-        "hours" | "hour" | "hrs" | "hr" | "h" => value * HOUR,
-        "minutes" | "minute" | "mins" | "min" | "m" => value * MINUTE,
-        "seconds" | "second" | "secs" | "sec" | "s" => value * SECOND,
-        "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => value,
-        _ => return Err(Error::new("invalid postfix")),
-    };
-
-    Ok(ret.round() as i64)
+    value
+        .parse::<f64>()
+        .map_err(|_| Error::new("invalid value"))
+        .and_then(move |value| match postfix {
+            "years" | "year" | "yrs" | "yr" | "y" => Ok(value * YEAR),
+            "weeks" | "week" | "w" => Ok(value * WEEK),
+            "days" | "day" | "d" => Ok(value * DAY),
+            "hours" | "hour" | "hrs" | "hr" | "h" => Ok(value * HOUR),
+            "minutes" | "minute" | "mins" | "min" | "m" => Ok(value * MINUTE),
+            "seconds" | "second" | "secs" | "sec" | "s" => Ok(value * SECOND),
+            "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => Ok(value),
+            _ => return Err(Error::new("invalid postfix")),
+        })
+        .map(|v| v.round() as i64)
 }
 
 /// Zero cost converter from human-like time into a number.
@@ -129,7 +123,7 @@ macro_rules! ms_expr {
 pub fn ms_into_time(s: &str) -> Result<Duration, Error> {
     let milliseconds = ms(s)?;
     if milliseconds < 0 {
-        return Err(Error::new("Time Duration cannot work with negative values"));
+        return Err(Error::new("time.Duration cannot work with negative values"));
     }
     Ok(Duration::from_millis(milliseconds as u64))
 }
