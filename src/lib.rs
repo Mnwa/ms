@@ -28,18 +28,19 @@ pub const YEAR: f64 = DAY * 365.25_f64;
 /// let value = ms("1d").unwrap();
 /// assert_eq!(value, 86400000)
 /// ```
-#[inline]
+#[inline(always)]
 pub fn ms(s: &str) -> Result<i64, Error> {
     let value_count = s
-        .chars()
-        .take_while(|c| c >= &'0' && c <= &'9' || c == &'.' || c == &'-')
+        .bytes()
+        .take_while(|c| (b'0'..=b'9').contains(c) || c == &b'.' || c == &b'-')
         .count();
 
     let (value, postfix) = s.split_at(value_count);
 
-    let value = value
-        .parse::<f64>()
+    let value: f64 = value
+        .parse()
         .map_or(Err(Error::new("invalid value")), |v| Ok(v))?;
+
     let postfix = postfix.trim();
 
     let ret = match postfix {
