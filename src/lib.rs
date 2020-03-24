@@ -18,16 +18,26 @@ pub const WEEK: f64 = DAY * 7_f64;
 /// How many milliseconds in one year
 pub const YEAR: f64 = DAY * 365.25_f64;
 
+/// ### Description
 /// Fast abstraction for converting human-like times into milliseconds.
 /// `ms` function gets an str slice and returns how much milliseconds in your pattern.
 ///
-/// Example:
+/// ### Usage
 /// ```
 /// use crate::ms_converter::ms;
 ///
 /// let value = ms("1d").unwrap();
 /// assert_eq!(value, 86400000)
 /// ```
+///
+/// ### Supported time strings
+/// * **Years:** `years`, `year`, `yrs`, `yr`, `y`
+/// * **Weeks:** `weeks`, `week`, `w`
+/// * **Days:** `days`, `day`, `d`
+/// * **Hours:** `hours`, `hour`, `hrs`, `hr`, `h`
+/// * **Minutes:** `minutes`, `minute`, `mins`, `min`, `m`
+/// * **Seconds:** `seconds`, `second`, `secs`, `sec`, `s`
+/// * **Milliseconds:** `milliseconds`, `millisecond`, `msecs`, `msec`, `ms` and empty postfix
 #[inline(always)]
 pub fn ms(s: &str) -> Result<i64, Error> {
     let (value, postfix) = s
@@ -51,12 +61,13 @@ pub fn ms(s: &str) -> Result<i64, Error> {
         .map(|v| v.round() as i64)
 }
 
+/// ### Description
 /// Zero cost converter from human-like time into a number.
 /// In the first argument, you need to pass type of your number (`i64`, `f64` and etc).
 /// The second argument is human-time construction, like `1 day`, `2 h`.
 /// The output will be a number with type what you set in the first argument.
 ///
-/// This macro will be precalculated in compilation time. Also, you can use ms_expr with constants:
+/// **This macro will be precalculated in compilation time.** Also, you can use ms_expr with constants:
 ///
 /// ```
 /// use crate::ms_converter::ms_expr;
@@ -65,7 +76,7 @@ pub fn ms(s: &str) -> Result<i64, Error> {
 /// assert_eq!(VALUE, 9000000.)
 /// ```
 ///
-/// Example:
+/// ### Usage
 /// ```
 /// use crate::ms_converter::ms_expr;
 ///
@@ -103,9 +114,10 @@ macro_rules! ms_expr {
     }};
 }
 
+/// ### Description
 /// Ms into time is the abstraction on `ms` function, which converts result into `time.Duration` type.
 /// `ms_into_time` function gets an str slice and returns `time.Duration`.
-/// `ms_into_time` has some limitations, it's not working with negative values:
+/// `ms_into_time` **has some limitations**, it's not working with negative values:
 /// ```
 /// use crate::ms_converter::ms_into_time;
 ///
@@ -113,7 +125,7 @@ macro_rules! ms_expr {
 /// assert_eq!(value, true)
 /// ```
 ///
-/// Example:
+/// ### Usage
 /// ```
 /// use crate::ms_converter::ms_into_time;
 ///
@@ -128,7 +140,7 @@ pub fn ms_into_time(s: &str) -> Result<Duration, Error> {
     Ok(Duration::from_millis(milliseconds as u64))
 }
 
-/// Error what return ms converter functions in runtime, if something is going wrong.
+/// Error which return `ms_converter` functions in runtime, if something is going wrong.
 #[derive(Debug)]
 pub struct Error {
     message: &'static str,

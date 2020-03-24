@@ -47,6 +47,15 @@ let value = ms_into_time("1d").unwrap();
 assert_eq!(value.as_millis(), 86400000)
 ```
 
+## Supported time strings
+* **Years:** `years`, `year`, `yrs`, `yr`, `y`
+* **Weeks:** `weeks`, `week`, `w`
+* **Days:** `days`, `day`, `d`
+* **Hours:** `hours`, `hour`, `hrs`, `hr`, `h`
+* **Minutes:** `minutes`, `minute`, `mins`, `min`, `m`
+* **Seconds:** `seconds`, `second`, `secs`, `sec`, `s`
+* **Milliseconds:** `milliseconds`, `millisecond`, `msecs`, `msec`, `ms` and empty postfix
+
 ## Performance
 You can check the performance diff between `ms_converter` and `ms` libraries [here](Benchmark.md).
 
