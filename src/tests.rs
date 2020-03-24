@@ -7,6 +7,12 @@ fn ms_1d() {
 }
 
 #[test]
+fn ms_1d_string() {
+    let value = ms("1d".to_string()).unwrap();
+    assert_eq!(value, 86400000)
+}
+
+#[test]
 fn ms_2d() {
     let value = ms("2 days").unwrap();
     assert_eq!(value, 172800000)

@@ -2,6 +2,7 @@
 #![doc(issue_tracker_base_url = "https://github.com/Mnwa/ms/issues/")]
 #![doc(html_root_url = "https://docs.rs/ms-converter/")]
 
+use std::borrow::Cow;
 use std::fmt::Formatter;
 use std::time::Duration;
 
@@ -20,7 +21,7 @@ pub const YEAR: f64 = DAY * 365.25_f64;
 
 /// ### Description
 /// Fast abstraction for converting human-like times into milliseconds.
-/// `ms` function gets an str slice and returns how much milliseconds in your pattern.
+/// `ms` function gets an str slice or String and returns how much milliseconds in your pattern.
 ///
 /// ### Usage
 /// ```
@@ -39,10 +40,14 @@ pub const YEAR: f64 = DAY * 365.25_f64;
 /// * **Seconds:** `seconds`, `second`, `secs`, `sec`, `s`
 /// * **Milliseconds:** `milliseconds`, `millisecond`, `msecs`, `msec`, `ms` and empty postfix
 #[inline(always)]
-pub fn ms(s: &str) -> Result<i64, Error> {
-    let (value, postfix) = s
+pub fn ms<'a, T>(s: T) -> Result<i64, Error>
+where
+    T: Into<Cow<'a, str>>,
+{
+    let s = s.into();
+    let (value, postfix): (&str, &str) = s
         .find(|c: char| !matches!(c, '0'..='9' | '.' | '-'))
-        .map_or((s, ""), move |vi| s.split_at(vi));
+        .map_or((&s, ""), |vi| s.split_at(vi));
 
     let postfix = postfix.trim();
     value
@@ -116,7 +121,7 @@ macro_rules! ms_expr {
 
 /// ### Description
 /// Ms into time is the abstraction on `ms` function, which converts result into `time.Duration` type.
-/// `ms_into_time` function gets an str slice and returns `time.Duration`.
+/// `ms_into_time` function gets an str slice or String and returns `time.Duration`.
 /// `ms_into_time` **has some limitations**, it's not working with negative values:
 /// ```
 /// use crate::ms_converter::ms_into_time;
@@ -132,7 +137,10 @@ macro_rules! ms_expr {
 /// let value = ms_into_time("1d").unwrap();
 /// assert_eq!(value.as_millis(), 86400000)
 /// ```
-pub fn ms_into_time(s: &str) -> Result<Duration, Error> {
+pub fn ms_into_time<'a, T>(s: T) -> Result<Duration, Error>
+where
+    T: Into<Cow<'a, str>>,
+{
     let milliseconds = ms(s)?;
     if milliseconds < 0 {
         return Err(Error::new("time.Duration cannot work with negative values"));
