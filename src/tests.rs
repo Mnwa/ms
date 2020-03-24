@@ -32,7 +32,13 @@ fn ms_neg_ms() {
 
 #[test]
 fn ms_invalid_postfix() {
-    let value = ms("100 xs").is_err();
+    let value = ms("100 test").is_err();
+    assert_eq!(value, true)
+}
+
+#[test]
+fn ms_invalid_num() {
+    let value = ms_into_time("test").is_err();
     assert_eq!(value, true)
 }
 
@@ -86,6 +92,12 @@ fn ms_into_time_neg_ms() {
 
 #[test]
 fn ms_into_time_invalid_postfix() {
-    let value = ms_into_time("100 xs").is_err();
+    let value = ms_into_time("100 test").is_err();
+    assert_eq!(value, true)
+}
+
+#[test]
+fn ms_into_time_invalid_num() {
+    let value = ms_into_time("test").is_err();
     assert_eq!(value, true)
 }
