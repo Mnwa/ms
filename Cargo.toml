@@ -1,6 +1,6 @@
 [package]
 name = "ms-converter"
-version = "0.7.4"
+version = "1.0.0"
 authors = ["Mnwa <mihan@panfilov.biz>"]
 edition = "2018"
 description = "Fast abstraction for converting human-like times into milliseconds."
