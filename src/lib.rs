@@ -52,14 +52,29 @@ where
 
     let postfix = postfix.trim();
     parse(value)
-        .and_then(move |value| match postfix {
-            "years" | "year" | "yrs" | "yr" | "y" => Ok(value * YEAR),
-            "weeks" | "week" | "w" => Ok(value * WEEK),
-            "days" | "day" | "d" => Ok(value * DAY),
-            "hours" | "hour" | "hrs" | "hr" | "h" => Ok(value * HOUR),
-            "minutes" | "minute" | "mins" | "min" | "m" => Ok(value * MINUTE),
-            "seconds" | "second" | "secs" | "sec" | "s" => Ok(value * SECOND),
-            "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => Ok(value),
+        .and_then(move |value| match postfix.as_bytes().first() {
+            Some(b'y') if matches!(postfix, "years" | "year" | "yrs" | "yr" | "y") => {
+                Ok(value * YEAR)
+            }
+            Some(b'w') if matches!(postfix, "weeks" | "week" | "w") => Ok(value * WEEK),
+            Some(b'd') if matches!(postfix, "days" | "day" | "d") => Ok(value * DAY),
+            Some(b'h') if matches!(postfix, "hours" | "hour" | "hrs" | "hr" | "h") => {
+                Ok(value * HOUR)
+            }
+            Some(b'm') if matches!(postfix, "minutes" | "minute" | "mins" | "min" | "m") => {
+                Ok(value * MINUTE)
+            }
+            None | Some(b'm')
+                if matches!(
+                    postfix,
+                    "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | ""
+                ) =>
+            {
+                Ok(value)
+            }
+            Some(b's') if matches!(postfix, "seconds" | "second" | "secs" | "sec" | "s") => {
+                Ok(value * SECOND)
+            }
             _ => Err(Error::new("invalid postfix")),
         })
         .map(|v| v.round() as i64)

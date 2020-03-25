@@ -1,5 +1,4 @@
 use crate::{ms, ms_into_time, parse};
-
 #[test]
 fn ms_1d() {
     let value = ms("1d").unwrap();
