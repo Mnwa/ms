@@ -67,7 +67,7 @@ where
 
 #[inline(always)]
 #[doc(hidden)]
-pub(crate) fn parse(num: &str) -> Result<f64, Error> {
+fn parse(num: &str) -> Result<f64, Error> {
     let mut num = num.as_bytes();
     let sign = match num.first() {
         Some(b'-') => {
