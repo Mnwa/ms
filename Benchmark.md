@@ -12,7 +12,7 @@ test tests::bench_ms_second    ... bench:     311,217 ns/iter (+/- 68,487)
 
 ## Environment
 * OS `macOs catalina 10.15.3`
-* Rust `1.41.0`
+* Rust `1.42.0`
 
 ## Metal
 * `MacBook Pro (16-inch, 2019)`
