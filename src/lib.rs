@@ -50,29 +50,29 @@ where
         .find(|c: char| !matches!(c, '0'..='9' | '.' | '-'))
         .map_or((&s, ""), |vi| s.split_at(vi));
 
-    let postfix = postfix.trim();
+    let postfix = postfix.trim().as_bytes();
     parse(value)
-        .and_then(move |value| match postfix.as_bytes().first() {
-            Some(b'y') if matches!(postfix, "years" | "year" | "yrs" | "yr" | "y") => {
+        .and_then(move |value| match postfix.first() {
+            Some(b'y') if matches!(postfix, b"years" | b"year" | b"yrs" | b"yr" | b"y") => {
                 Ok(value * YEAR)
             }
-            Some(b'w') if matches!(postfix, "weeks" | "week" | "w") => Ok(value * WEEK),
-            Some(b'd') if matches!(postfix, "days" | "day" | "d") => Ok(value * DAY),
-            Some(b'h') if matches!(postfix, "hours" | "hour" | "hrs" | "hr" | "h") => {
+            Some(b'w') if matches!(postfix, b"weeks" | b"week" | b"w") => Ok(value * WEEK),
+            Some(b'd') if matches!(postfix, b"days" | b"day" | b"d") => Ok(value * DAY),
+            Some(b'h') if matches!(postfix, b"hours" | b"hour" | b"hrs" | b"hr" | b"h") => {
                 Ok(value * HOUR)
             }
-            Some(b'm') if matches!(postfix, "minutes" | "minute" | "mins" | "min" | "m") => {
+            Some(b'm') if matches!(postfix, b"minutes" | b"minute" | b"mins" | b"min" | b"m") => {
                 Ok(value * MINUTE)
             }
             None | Some(b'm')
                 if matches!(
                     postfix,
-                    "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | ""
+                    b"milliseconds" | b"millisecond" | b"msecs" | b"msec" | b"ms" | b""
                 ) =>
             {
                 Ok(value)
             }
-            Some(b's') if matches!(postfix, "seconds" | "second" | "secs" | "sec" | "s") => {
+            Some(b's') if matches!(postfix, b"seconds" | b"second" | b"secs" | b"sec" | b"s") => {
                 Ok(value * SECOND)
             }
             _ => Err(Error::new("invalid postfix")),
