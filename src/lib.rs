@@ -4,6 +4,7 @@
 
 use std::borrow::Cow;
 use std::fmt::Formatter;
+use std::ops::{Add, Mul, Sub};
 use std::time::Duration;
 
 /// How many milliseconds in one second
@@ -50,39 +51,41 @@ where
         .map_or((&s, ""), |vi| s.split_at(vi));
 
     let postfix = postfix.trim();
-    let value = parse(value);
-
-    let value = match postfix {
-        "years" | "year" | "yrs" | "yr" | "y" => Ok(value * YEAR),
-        "weeks" | "week" | "w" => Ok(value * WEEK),
-        "days" | "day" | "d" => Ok(value * DAY),
-        "hours" | "hour" | "hrs" | "hr" | "h" => Ok(value * HOUR),
-        "minutes" | "minute" | "mins" | "min" | "m" => Ok(value * MINUTE),
-        "seconds" | "second" | "secs" | "sec" | "s" => Ok(value * SECOND),
-        "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => Ok(value),
-        _ => return Err(Error::new("invalid postfix")),
-    };
-
-    value.map(|v| v.round() as i64)
+    parse(value)
+        .and_then(move |value| match postfix {
+            "years" | "year" | "yrs" | "yr" | "y" => Ok(value * YEAR),
+            "weeks" | "week" | "w" => Ok(value * WEEK),
+            "days" | "day" | "d" => Ok(value * DAY),
+            "hours" | "hour" | "hrs" | "hr" | "h" => Ok(value * HOUR),
+            "minutes" | "minute" | "mins" | "min" | "m" => Ok(value * MINUTE),
+            "seconds" | "second" | "secs" | "sec" | "s" => Ok(value * SECOND),
+            "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => Ok(value),
+            _ => return Err(Error::new("invalid postfix")),
+        })
+        .map(|v| v.round() as i64)
 }
 
 #[inline(always)]
 #[doc(hidden)]
-fn parse(num: &str) -> f64 {
+fn parse(num: &str) -> Result<f64, Error> {
     let mut num = num.as_bytes();
     let mut sign = 1_f64;
     if matches!(num.first(), Some(b'-')) {
         num = &num[1..];
-        sign = -1f64;
+        sign = -1_f64;
     }
-    let (ind, mut dist) = num
+    let (mut ind, mut dist) = num
         .iter()
         .take_while(|b| matches!(b, b'0'..=b'9'))
         .map(|b| (b - b'0') as f64)
-        .fold((1, 0_f64), |acc, b| {
+        .fold((0, 0_f64), |acc, b| {
             let (ind, dist) = acc;
-            (ind + 1, dist.mul_add(10_f64, b))
+            (ind.add(1), dist.mul_add(10_f64, b))
         });
+
+    if matches!(num.get(ind), Some(b'.')) {
+        ind = ind.add(1)
+    }
 
     if ind < num.len() {
         let (pow, temp) = num[ind..]
@@ -91,13 +94,19 @@ fn parse(num: &str) -> f64 {
             .map(|b| (b - b'0') as f64)
             .fold((1, 0_f64), |acc, b| {
                 let (pow, temp) = acc;
-                (pow + 1, temp.mul_add(10_f64, b))
+                (pow.add(1), temp.mul_add(10_f64, b))
             });
 
-        dist += temp * (10_f64).powi(-pow + 1);
+        ind = ind.add(pow as usize).sub(1);
+        let pow: i32 = pow.mul(-1_i32).add(1_i32);
+        dist = dist.add(temp.mul((10_f64).powi(pow)));
     }
 
-    sign * dist
+    if num.len() != ind {
+        Err(Error::new("invalid value"))
+    } else {
+        Ok(dist.mul(sign))
+    }
 }
 
 /// ### Description

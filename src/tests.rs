@@ -38,8 +38,26 @@ fn ms_invalid_postfix() {
 
 #[test]
 fn ms_invalid_num() {
-    let value = ms_into_time("test").is_err();
+    let value = ms("test").is_err();
     assert_eq!(value, true)
+}
+
+#[test]
+fn ms_invalid_num_2() {
+    let value = ms("1-2").is_err();
+    assert_eq!(value, true)
+}
+
+#[test]
+fn ms_invalid_num_3() {
+    let value = ms("1..2").is_err();
+    assert_eq!(value, true)
+}
+
+#[test]
+fn ms_empty_dot() {
+    let value = ms("12.").unwrap();
+    assert_eq!(value, 12)
 }
 
 #[test]
@@ -93,11 +111,5 @@ fn ms_into_time_neg_ms() {
 #[test]
 fn ms_into_time_invalid_postfix() {
     let value = ms_into_time("100 test").is_err();
-    assert_eq!(value, true)
-}
-
-#[test]
-fn ms_into_time_invalid_num() {
-    let value = ms_into_time("test").is_err();
     assert_eq!(value, true)
 }
