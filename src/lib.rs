@@ -60,7 +60,7 @@ where
             "minutes" | "minute" | "mins" | "min" | "m" => Ok(value * MINUTE),
             "seconds" | "second" | "secs" | "sec" | "s" => Ok(value * SECOND),
             "milliseconds" | "millisecond" | "msecs" | "msec" | "ms" | "" => Ok(value),
-            _ => return Err(Error::new("invalid postfix")),
+            _ => Err(Error::new("invalid postfix")),
         })
         .map(|v| v.round() as i64)
 }
