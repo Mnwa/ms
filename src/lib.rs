@@ -67,13 +67,15 @@ where
 
 #[inline(always)]
 #[doc(hidden)]
-fn parse(num: &str) -> Result<f64, Error> {
+pub(crate) fn parse(num: &str) -> Result<f64, Error> {
     let mut num = num.as_bytes();
-    let mut sign = 1_f64;
-    if matches!(num.first(), Some(b'-')) {
-        num = &num[1..];
-        sign = -1_f64;
-    }
+    let sign = match num.first() {
+        Some(b'-') => {
+            num = &num[1..];
+            -1_f64
+        }
+        _ => 1_f64,
+    };
     let (mut ind, mut dist) = num
         .iter()
         .take_while(|b| matches!(b, b'0'..=b'9'))
