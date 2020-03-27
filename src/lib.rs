@@ -45,10 +45,10 @@ pub fn ms<'a, T>(s: T) -> Result<i64, Error>
 where
     T: Into<Cow<'a, str>>,
 {
-    let s = s.into();
+    let s = &*s.into();
     let (value, postfix): (&str, &str) = s
         .find(|c: char| !matches!(c, '0'..='9' | '.' | '-'))
-        .map_or((&s, ""), |vi| s.split_at(vi));
+        .map_or((s, ""), |vi| s.split_at(vi));
 
     let postfix = postfix.trim().as_bytes();
     parse(value)
