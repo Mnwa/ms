@@ -65,7 +65,6 @@ pub const WEEK: f64 = DAY * 7_f64;
 /// How many milliseconds in one year
 pub const YEAR: f64 = DAY * 365.25_f64;
 
-/// ### Description
 /// Fast abstraction for converting human-like times into milliseconds.
 /// `ms` function gets an str slice or String and returns how much milliseconds in your pattern.
 ///
@@ -171,7 +170,6 @@ fn parse(num: &str) -> Result<f64, Error> {
     }
 }
 
-/// ### Description
 /// Zero cost converter from human-like time into a number.
 /// In the first argument, you need to pass type of your number (`i64`, `f64` and etc).
 /// The second argument is human-time construction, like `1 day`, `2 h`.
@@ -224,7 +222,6 @@ macro_rules! ms_expr {
     }};
 }
 
-/// ### Description
 /// Ms into time is the abstraction on `ms` function, which converts result into `time.Duration` type.
 /// `ms_into_time` function gets an str slice or String and returns `time.Duration`.
 /// `ms_into_time` **has some limitations**, it's not working with negative values:
