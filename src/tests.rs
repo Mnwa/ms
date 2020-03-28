@@ -1,4 +1,5 @@
 use crate::{ms, ms_into_time, parse};
+use std::string::ToString;
 
 #[test]
 fn ms_1d() {
