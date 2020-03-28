@@ -1,4 +1,46 @@
-#![doc = "Fast converter various time formats into milliseconds."]
+/*!
+Fast abstraction for converting human-like times into milliseconds.
+
+There are two ways to calculate milliseconds:
+* In the runtime `crate::ms_converter::ms`
+* In the compilation time `crate::ms_converter::ms_expr`
+
+## Usage
+
+### Running ms converter in Runtime:
+```rust
+use crate::ms_converter::ms;
+
+let value = ms("1d").unwrap();
+assert_eq!(value, 86400000)
+```
+
+### Convert ms in the compilation step:
+```rust
+use crate::ms_converter::ms_expr;
+
+const VALUE: i64 = ms_expr!(i64, 1 d);
+assert_eq!(VALUE, 86400000)
+```
+
+### Convert ms into `time.Duration`
+```rust
+use crate::ms_converter::ms_into_time;
+
+let value = ms_into_time("1d").unwrap();
+assert_eq!(value.as_millis(), 86400000)
+```
+
+## Supported time strings
+* **Years:** `years`, `year`, `yrs`, `yr`, `y`
+* **Weeks:** `weeks`, `week`, `w`
+* **Days:** `days`, `day`, `d`
+* **Hours:** `hours`, `hour`, `hrs`, `hr`, `h`
+* **Minutes:** `minutes`, `minute`, `mins`, `min`, `m`
+* **Seconds:** `seconds`, `second`, `secs`, `sec`, `s`
+* **Milliseconds:** `milliseconds`, `millisecond`, `msecs`, `msec`, `ms` and empty postfix
+*/
+
 #![doc(issue_tracker_base_url = "https://github.com/Mnwa/ms/issues/")]
 #![doc(html_root_url = "https://docs.rs/ms-converter/")]
 #![no_std]
