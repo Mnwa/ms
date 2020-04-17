@@ -137,8 +137,8 @@ fn parse(num: &str) -> Result<f64, Error> {
     };
     let (mut ind, mut dist) = num
         .iter()
-        .take_while(|b| matches!(b, b'0'..=b'9'))
-        .map(|b| (b - b'0') as f64)
+        .take_while(|b| b.is_ascii_digit())
+        .map(|b| b.sub(b'0') as f64)
         .fold((0, 0_f64), |acc, b| {
             let (ind, dist) = acc;
             (ind.add(1), dist.mul_add(10_f64, b))
@@ -151,8 +151,8 @@ fn parse(num: &str) -> Result<f64, Error> {
     if ind < num.len() {
         let (pow, temp) = num[ind..]
             .iter()
-            .take_while(|b| matches!(b, b'0'..=b'9'))
-            .map(|b| (b - b'0') as f64)
+            .take_while(|b| b.is_ascii_digit())
+            .map(|b| b.sub(b'0') as f64)
             .fold((1, 0_f64), |acc, b| {
                 let (pow, temp) = acc;
                 (pow.add(1), temp.mul_add(10_f64, b))
@@ -166,7 +166,7 @@ fn parse(num: &str) -> Result<f64, Error> {
     if num.len() != ind {
         Err(Error::new("invalid value"))
     } else {
-        Ok(dist.mul(sign))
+        Ok(dist.copysign(sign))
     }
 }
 
