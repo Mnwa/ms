@@ -118,39 +118,39 @@ fn ms_into_time_invalid_postfix() {
 
 #[test]
 fn parse_invalid_num() {
-    let value = parse("test").is_err();
+    let value = parse("test".as_bytes()).is_err();
     assert_eq!(value, true)
 }
 
 #[test]
 fn parse_invalid_num_2() {
-    let value = parse("1-2").is_err();
+    let value = parse("1-2".as_bytes()).is_err();
     assert_eq!(value, true)
 }
 
 #[test]
 fn parse_invalid_num_3() {
-    let value = parse("1..2").is_err();
+    let value = parse("1..2".as_bytes()).is_err();
     assert_eq!(value, true)
 }
 
 #[test]
 #[allow(clippy::float_cmp)]
 fn parse_empty_dot() {
-    let value = parse("12.").unwrap();
+    let value = parse("12.".as_bytes()).unwrap();
     assert_eq!(value, 12.)
 }
 
 #[test]
 #[allow(clippy::float_cmp)]
 fn parse_num() {
-    let value = parse("12").unwrap();
+    let value = parse("12".as_bytes()).unwrap();
     assert_eq!(value, 12.)
 }
 
 #[test]
 #[allow(clippy::float_cmp)]
 fn parse_dec_num() {
-    let value = parse("12.5").unwrap();
+    let value = parse("12.5".as_bytes()).unwrap();
     assert_eq!(value, 12.5)
 }
