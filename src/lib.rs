@@ -90,12 +90,18 @@ where
     T: Into<Cow<'a, str>>,
 {
     let s = &*s.into();
+
     let (value, postfix): (&str, &str) = s
         .find(|c: char| !matches!(c, '0'..='9' | '.' | '-'))
         .map_or((s, ""), |vi| s.split_at(vi));
 
-    let postfix = postfix.trim().as_bytes();
-    parse(value)
+    let postfix = postfix.as_bytes();
+    let postfix = match postfix.first() {
+        Some(c) if c.is_ascii_whitespace() => &postfix[1..],
+        _ => postfix,
+    };
+
+    parse(value.as_bytes())
         .and_then(move |value| match postfix.first() {
             Some(b'y') if matches!(postfix, b"years" | b"year" | b"yrs" | b"yr" | b"y") => {
                 Ok(value * YEAR)
@@ -126,8 +132,7 @@ where
 
 #[inline(always)]
 #[doc(hidden)]
-fn parse(num: &str) -> Result<f64, Error> {
-    let mut num = num.as_bytes();
+fn parse(mut num: &[u8]) -> Result<f64, Error> {
     let sign = match num.first() {
         Some(b'-') => {
             num = &num[1..];
@@ -163,10 +168,10 @@ fn parse(num: &str) -> Result<f64, Error> {
         dist = dist.add(temp.mul((10_f64).powi(pow)));
     }
 
-    if num.len() != ind {
-        Err(Error::new("invalid value"))
-    } else {
+    if num.len() == ind {
         Ok(dist.copysign(sign))
+    } else {
+        Err(Error::new("invalid value"))
     }
 }
 
