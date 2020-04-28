@@ -148,8 +148,7 @@ fn parse(mut num: &[u8]) -> Result<f64, Error> {
         .iter()
         .take_while(|b| b.is_ascii_digit())
         .map(|b| b.sub(b'0') as f64)
-        .fold((0, 0_f64), |acc, b| {
-            let (ind, dist) = acc;
+        .fold((0, 0_f64), |(ind, dist), b| {
             (ind.add(1), dist.mul_add(10_f64, b))
         });
 
@@ -162,8 +161,7 @@ fn parse(mut num: &[u8]) -> Result<f64, Error> {
             .iter()
             .take_while(|b| b.is_ascii_digit())
             .map(|b| b.sub(b'0') as f64)
-            .fold((1, 0_f64), |acc, b| {
-                let (pow, temp) = acc;
+            .fold((1, 0_f64), |(pow, temp), b| {
                 (pow.add(1), temp.mul_add(10_f64, b))
             });
 
