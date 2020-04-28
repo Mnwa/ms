@@ -92,7 +92,7 @@ where
     let s = &*s.into();
 
     let (value, postfix): (&str, &str) = s
-        .find(|c: char| !matches!(c, '0'..='9' | '.' | '-'))
+        .find(|c: char| !matches!(c, '0'..='9' | '.' | '-' | '+'))
         .map_or((s, ""), |vi| s.split_at(vi));
 
     let postfix = postfix.as_bytes();

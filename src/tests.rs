@@ -26,6 +26,12 @@ fn ms_2_5h() {
 }
 
 #[test]
+fn ms_pos_ms() {
+    let value = ms("+100").unwrap();
+    assert_eq!(value, 100)
+}
+
+#[test]
 fn ms_neg_ms() {
     let value = ms("-100").unwrap();
     assert_eq!(value, -100)
