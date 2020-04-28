@@ -4,8 +4,8 @@ There is diff between `ms` library and `ms-converter`
 ## Perfomance diff
 ```text
 running 2 tests
-test tests::bench_ms_converter ... bench:          16 ns/iter (+/- 1)
-test tests::bench_ms_second    ... bench:     311,217 ns/iter (+/- 68,487)
+test tests::bench_ms_converter ... bench:           8 ns/iter (+/- 0)
+test tests::bench_ms_second    ... bench:     328,517 ns/iter (+/- 152,948)
 ```
 
 `ms_converter` is faster than `ms` by more than 11191 times!
