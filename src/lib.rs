@@ -138,6 +138,10 @@ fn parse(mut num: &[u8]) -> Result<f64, Error> {
             num = &num[1..];
             -1_f64
         }
+        Some(b'+') => {
+            num = &num[1..];
+            1_f64
+        }
         _ => 1_f64,
     };
     let (mut ind, mut dist) = num
@@ -164,7 +168,7 @@ fn parse(mut num: &[u8]) -> Result<f64, Error> {
             });
 
         ind = ind.add(pow as usize).sub(1);
-        let pow: i32 = pow.mul(-1_i32).add(1_i32);
+        let pow = pow.mul(-1_i32).add(1);
         dist = dist.add(temp.mul((10_f64).powi(pow)));
     }
 
