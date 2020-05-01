@@ -1,4 +1,4 @@
-use crate::{ms, ms_into_time, parse};
+use crate::{from_ms, ms, ms_into_time, parse, DAY, HOUR, MINUTE, SECOND, WEEK, YEAR};
 use std::string::ToString;
 
 #[test]
@@ -159,4 +159,88 @@ fn parse_num() {
 fn parse_dec_num() {
     let value = parse(b"12.5").unwrap();
     assert_eq!(value, 12.5)
+}
+
+#[test]
+fn from_ms_base() {
+    let value = from_ms(1, "ms").unwrap();
+    assert_eq!(value, "1ms")
+}
+
+#[test]
+fn from_ms_base_space() {
+    let value = from_ms(1, " ms").unwrap();
+    assert_eq!(value, "1 ms")
+}
+
+#[test]
+fn from_ms_seconds() {
+    let value = from_ms(10 * SECOND as i64, "seconds").unwrap();
+    assert_eq!(value, "10seconds")
+}
+
+#[test]
+fn from_ms_seconds_space() {
+    let value = from_ms(10 * SECOND as i64, " seconds").unwrap();
+    assert_eq!(value, "10 seconds")
+}
+
+#[test]
+fn from_ms_minute() {
+    let value = from_ms(MINUTE as i64, "minute").unwrap();
+    assert_eq!(value, "1minute")
+}
+
+#[test]
+fn from_ms_minute_space() {
+    let value = from_ms(MINUTE as i64, " minute").unwrap();
+    assert_eq!(value, "1 minute")
+}
+
+#[test]
+fn from_ms_hours() {
+    let value = from_ms(10 * HOUR as i64, "hours").unwrap();
+    assert_eq!(value, "10hours")
+}
+
+#[test]
+fn from_ms_hours_space() {
+    let value = from_ms(10 * HOUR as i64, " hours").unwrap();
+    assert_eq!(value, "10 hours")
+}
+
+#[test]
+fn from_ms_day() {
+    let value = from_ms(DAY as i64, "day").unwrap();
+    assert_eq!(value, "1day")
+}
+
+#[test]
+fn from_ms_day_space() {
+    let value = from_ms(DAY as i64, " day").unwrap();
+    assert_eq!(value, "1 day")
+}
+
+#[test]
+fn from_ms_weeks() {
+    let value = from_ms(10 * WEEK as i64, "weeks").unwrap();
+    assert_eq!(value, "10weeks")
+}
+
+#[test]
+fn from_ms_weeks_space() {
+    let value = from_ms(10 * WEEK as i64, " weeks").unwrap();
+    assert_eq!(value, "10 weeks")
+}
+
+#[test]
+fn from_ms_year() {
+    let value = from_ms(YEAR as i64, "year").unwrap();
+    assert_eq!(value, "1year")
+}
+
+#[test]
+fn from_ms_year_space() {
+    let value = from_ms(YEAR as i64, " year").unwrap();
+    assert_eq!(value, "1 year")
 }
