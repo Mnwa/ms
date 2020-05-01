@@ -120,10 +120,17 @@ where
 /// ```
 /// use crate::ms_converter::{get_duration_by_postfix, DAY};
 ///
-/// let value = get_duration_by_postfix(1 * DAY as i64, " day").unwrap();
+/// let value = get_duration_by_postfix(DAY as i64, " day").unwrap();
 /// assert_eq!(value, "1 day")
 /// ```
+/// also you can a pass negative values
+/// ```
+/// use crate::ms_converter::{get_duration_by_postfix, DAY};
 ///
+/// let value = get_duration_by_postfix(-DAY as i64, " day").unwrap();
+/// assert_eq!(value, "-1 day")
+/// ```
+
 /// ### Supported postfixes
 /// * **Years:** `years`, `year`, `yrs`, `yr`, `y`
 /// * **Weeks:** `weeks`, `week`, `w`
@@ -156,6 +163,14 @@ where
 /// use crate::ms_converter::{get_max_possible_duration, WEEK};
 ///
 /// let value = get_max_possible_duration(2 * WEEK as i64).unwrap();
+/// assert_eq!(value, "14d") // Max possible time is a one week
+/// ```
+///
+/// also you can a pass negative values
+/// ```
+/// use crate::ms_converter::{get_max_possible_duration, WEEK};
+///
+/// let value = get_max_possible_duration(-2 * WEEK as i64).unwrap();
 /// assert_eq!(value, "14d") // Max possible time is a one week
 /// ```
 #[inline]

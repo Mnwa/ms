@@ -249,6 +249,18 @@ fn get_duration_by_postfix_year_space() {
 }
 
 #[test]
+fn get_duration_by_postfix_year_neg() {
+    let value = get_duration_by_postfix(-YEAR as i64, "year").unwrap();
+    assert_eq!(value, "-1year")
+}
+
+#[test]
+fn get_duration_by_postfix_year_neg_space() {
+    let value = get_duration_by_postfix(-YEAR as i64, " year").unwrap();
+    assert_eq!(value, "-1 year")
+}
+
+#[test]
 fn get_max_possible_duration_milliseconds() {
     let value = get_max_possible_duration(11 as i64).unwrap();
     assert_eq!(value, "11ms")
@@ -287,4 +299,10 @@ fn get_max_possible_duration_weeks() {
 fn get_max_possible_duration_two_weeks() {
     let value = get_max_possible_duration(2 * WEEK as i64).unwrap();
     assert_eq!(value, "14d")
+}
+
+#[test]
+fn get_max_possible_duration_weeks_neg() {
+    let value = get_max_possible_duration(-WEEK as i64).unwrap();
+    assert_eq!(value, "-7d")
 }
