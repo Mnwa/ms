@@ -31,6 +31,22 @@ let value = ms_into_time("1d").unwrap();
 assert_eq!(value.as_millis(), 86400000)
 ```
 
+### Convert milliseconds into human-like time string
+```
+use crate::ms_converter::{get_duration_by_postfix, DAY};
+
+let value = get_duration_by_postfix(DAY as i64, " day").unwrap();
+assert_eq!(value, "1 day")
+```
+
+### Convert milliseconds into human-like time string without postfix
+```
+use crate::ms_converter::{get_max_possible_duration, DAY};
+
+let value = get_max_possible_duration(DAY as i64).unwrap();
+assert_eq!(value, "1d")
+```
+
 ## Supported time strings
 * **Years:** `years`, `year`, `yrs`, `yr`, `y`
 * **Weeks:** `weeks`, `week`, `w`
