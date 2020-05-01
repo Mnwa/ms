@@ -171,7 +171,7 @@ where
 /// use crate::ms_converter::{get_max_possible_duration, WEEK};
 ///
 /// let value = get_max_possible_duration(-2 * WEEK as i64).unwrap();
-/// assert_eq!(value, "14d") // Max possible time is a one week
+/// assert_eq!(value, "-14d") // Max possible time is a one week
 /// ```
 #[inline]
 pub fn get_max_possible_duration(milliseconds: i64) -> Result<String, Error> {
