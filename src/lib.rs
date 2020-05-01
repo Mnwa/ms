@@ -105,22 +105,22 @@ where
 }
 
 /// Getting human-like time from milliseconds.
-/// `from_ms` function gets a milliseconds count and str slice or String as postfix
+/// `get_duration_by_postfix` function gets a milliseconds count and str slice or String as postfix
 /// and returns a string with your time.
 ///
 /// ### Usage
 /// ```
-/// use crate::ms_converter::{from_ms, DAY};
+/// use crate::ms_converter::{get_duration_by_postfix, DAY};
 ///
-/// let value = from_ms(1 * DAY as i64, "day").unwrap();
+/// let value = get_duration_by_postfix(1 * DAY as i64, "day").unwrap();
 /// assert_eq!(value, "1day")
 /// ```
 ///
 /// You can add the space to start of you prefix to get space between date and postfix on return.
 /// ```
-/// use crate::ms_converter::{from_ms, DAY};
+/// use crate::ms_converter::{get_duration_by_postfix, DAY};
 ///
-/// let value = from_ms(1 * DAY as i64, " day").unwrap();
+/// let value = get_duration_by_postfix(1 * DAY as i64, " day").unwrap();
 /// assert_eq!(value, "1 day")
 /// ```
 ///
@@ -133,7 +133,7 @@ where
 /// * **Seconds:** `seconds`, `second`, `secs`, `sec`, `s`
 /// * **Milliseconds:** `milliseconds`, `millisecond`, `msecs`, `msec`, `ms` and empty postfix
 #[inline]
-pub fn from_ms<'a, P>(milliseconds: i64, postfix: P) -> Result<String, Error>
+pub fn get_duration_by_postfix<'a, P>(milliseconds: i64, postfix: P) -> Result<String, Error>
 where
     P: Into<Cow<'a, str>>,
 {
@@ -145,6 +145,29 @@ where
         (milliseconds as f64 / v).round() as i64,
         postfix
     ))
+}
+
+/// Getting human-like time from milliseconds.
+/// `get_max_possible_duration` function gets a milliseconds count and returns a max possible string with your time.
+/// `get_max_possible_duration` **has some limitations** maximum of avalable postfixes is a day.
+///
+/// ### Usage
+/// ```
+/// use crate::ms_converter::{get_max_possible_duration, WEEK};
+///
+/// let value = get_max_possible_duration(2 * WEEK as i64).unwrap();
+/// assert_eq!(value, "14d") // Max possible time is a one week
+/// ```
+#[inline]
+pub fn get_max_possible_duration(milliseconds: i64) -> Result<String, Error> {
+    let postfix = match milliseconds.abs() {
+        m if m >= DAY as i64 => "d",
+        m if m >= HOUR as i64 => "h",
+        m if m >= MINUTE as i64 => "m",
+        m if m >= SECOND as i64 => "s",
+        _ => "ms",
+    };
+    get_duration_by_postfix(milliseconds, postfix)
 }
 
 #[inline(always)]
