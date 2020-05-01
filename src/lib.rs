@@ -49,7 +49,9 @@ extern crate std;
 
 use std::borrow::Cow;
 use std::fmt::Formatter;
+use std::format;
 use std::ops::{Add, Mul, Sub};
+use std::string::String;
 use std::time::Duration;
 
 /// How many milliseconds in one second
@@ -95,39 +97,128 @@ where
         .find(|c: char| !matches!(c, '0'..='9' | '.' | '-' | '+'))
         .map_or((s, ""), |vi| s.split_at(vi));
 
-    let postfix = postfix.as_bytes();
-    let postfix = match postfix.first() {
-        Some(c) if c.is_ascii_whitespace() => &postfix[1..],
-        _ => postfix,
-    };
+    let postfix = get_byte_postfix(postfix);
 
     parse(value.as_bytes())
-        .and_then(move |value| match postfix.first() {
-            Some(b'y') if matches!(postfix, b"years" | b"year" | b"yrs" | b"yr" | b"y") => {
-                Ok(value * YEAR)
-            }
-            Some(b'w') if matches!(postfix, b"weeks" | b"week" | b"w") => Ok(value * WEEK),
-            Some(b'd') if matches!(postfix, b"days" | b"day" | b"d") => Ok(value * DAY),
-            Some(b'h') if matches!(postfix, b"hours" | b"hour" | b"hrs" | b"hr" | b"h") => {
-                Ok(value * HOUR)
-            }
-            Some(b'm') if matches!(postfix, b"minutes" | b"minute" | b"mins" | b"min" | b"m") => {
-                Ok(value * MINUTE)
-            }
-            None | Some(b'm')
-                if matches!(
-                    postfix,
-                    b"milliseconds" | b"millisecond" | b"msecs" | b"msec" | b"ms" | b""
-                ) =>
-            {
-                Ok(value)
-            }
-            Some(b's') if matches!(postfix, b"seconds" | b"second" | b"secs" | b"sec" | b"s") => {
-                Ok(value * SECOND)
-            }
-            _ => Err(Error::new("invalid postfix")),
-        })
+        .and_then(move |value| Ok(get_modification(postfix)? * value))
         .map(|v| v.round() as i64)
+}
+
+/// Getting human-like time from milliseconds.
+/// `get_duration_by_postfix` function gets a milliseconds count and str slice or String as postfix
+/// and returns a string with your time.
+///
+/// ### Usage
+/// ```
+/// use crate::ms_converter::{get_duration_by_postfix, DAY};
+///
+/// let value = get_duration_by_postfix(1 * DAY as i64, "day").unwrap();
+/// assert_eq!(value, "1day")
+/// ```
+///
+/// You can add the space to start of you prefix to get space between date and postfix on return.
+/// ```
+/// use crate::ms_converter::{get_duration_by_postfix, DAY};
+///
+/// let value = get_duration_by_postfix(DAY as i64, " day").unwrap();
+/// assert_eq!(value, "1 day")
+/// ```
+/// also you can a pass negative values
+/// ```
+/// use crate::ms_converter::{get_duration_by_postfix, DAY};
+///
+/// let value = get_duration_by_postfix(-DAY as i64, " day").unwrap();
+/// assert_eq!(value, "-1 day")
+/// ```
+
+/// ### Supported postfixes
+/// * **Years:** `years`, `year`, `yrs`, `yr`, `y`
+/// * **Weeks:** `weeks`, `week`, `w`
+/// * **Days:** `days`, `day`, `d`
+/// * **Hours:** `hours`, `hour`, `hrs`, `hr`, `h`
+/// * **Minutes:** `minutes`, `minute`, `mins`, `min`, `m`
+/// * **Seconds:** `seconds`, `second`, `secs`, `sec`, `s`
+/// * **Milliseconds:** `milliseconds`, `millisecond`, `msecs`, `msec`, `ms` and empty postfix
+#[inline]
+pub fn get_duration_by_postfix<'a, P>(milliseconds: i64, postfix: P) -> Result<String, Error>
+where
+    P: Into<Cow<'a, str>>,
+{
+    let postfix = &*postfix.into();
+    let b_postfix = get_byte_postfix(postfix);
+    let v = get_modification(b_postfix)?;
+    Ok(format!(
+        "{}{}",
+        (milliseconds as f64 / v).round() as i64,
+        postfix
+    ))
+}
+
+/// Getting human-like time from milliseconds.
+/// `get_max_possible_duration` function gets a milliseconds count and returns a max possible string with your time.
+/// `get_max_possible_duration` **has some limitations** maximum of avalable postfixes is a day.
+///
+/// ### Usage
+/// ```
+/// use crate::ms_converter::{get_max_possible_duration, WEEK};
+///
+/// let value = get_max_possible_duration(2 * WEEK as i64).unwrap();
+/// assert_eq!(value, "14d") // Max possible time is a one week
+/// ```
+///
+/// also you can a pass negative values
+/// ```
+/// use crate::ms_converter::{get_max_possible_duration, WEEK};
+///
+/// let value = get_max_possible_duration(-2 * WEEK as i64).unwrap();
+/// assert_eq!(value, "-14d") // Max possible time is a one week
+/// ```
+#[inline]
+pub fn get_max_possible_duration(milliseconds: i64) -> Result<String, Error> {
+    let postfix = match milliseconds.abs() {
+        m if m >= DAY as i64 => "d",
+        m if m >= HOUR as i64 => "h",
+        m if m >= MINUTE as i64 => "m",
+        m if m >= SECOND as i64 => "s",
+        _ => "ms",
+    };
+    get_duration_by_postfix(milliseconds, postfix)
+}
+
+#[inline(always)]
+#[doc(hidden)]
+fn get_byte_postfix(postfix: &str) -> &[u8] {
+    let b_postfix = postfix.as_bytes();
+    match b_postfix.first() {
+        Some(c) if c.is_ascii_whitespace() => &b_postfix[1..],
+        _ => b_postfix,
+    }
+}
+
+#[inline(always)]
+#[doc(hidden)]
+fn get_modification(postfix: &[u8]) -> Result<f64, Error> {
+    match postfix.first() {
+        Some(b'y') if matches!(postfix, b"years" | b"year" | b"yrs" | b"yr" | b"y") => Ok(YEAR),
+        Some(b'w') if matches!(postfix, b"weeks" | b"week" | b"w") => Ok(WEEK),
+        Some(b'd') if matches!(postfix, b"days" | b"day" | b"d") => Ok(DAY),
+        Some(b'h') if matches!(postfix, b"hours" | b"hour" | b"hrs" | b"hr" | b"h") => Ok(HOUR),
+        Some(b'm') if matches!(postfix, b"minutes" | b"minute" | b"mins" | b"min" | b"m") => {
+            Ok(MINUTE)
+        }
+        None | Some(b'm')
+            if matches!(
+                postfix,
+                b"milliseconds" | b"millisecond" | b"msecs" | b"msec" | b"ms" | b""
+            ) =>
+        {
+            Ok(1f64)
+        }
+        Some(b's') if matches!(postfix, b"seconds" | b"second" | b"secs" | b"sec" | b"s") => {
+            Ok(SECOND)
+        }
+        _ => Err(Error::new("invalid postfix")),
+    }
 }
 
 #[inline(always)]
