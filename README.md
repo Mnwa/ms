@@ -18,7 +18,7 @@ Add this to your Cargo.toml:
 
 ```toml
 [dependencies]
-ms-converter = "1.3"
+ms-converter = "1.4"
 ```
 
 ### Examples
@@ -61,6 +61,14 @@ use crate::ms_converter::{get_max_possible_duration, DAY};
 
 let value = get_max_possible_duration(DAY as i64).unwrap();
 assert_eq!(value, "1d")
+```
+
+### Convert milliseconds into long human-like time string without postfix
+```rust
+use crate::ms_converter::{get_max_possible_duration_long, WEEK};
+
+let value = get_max_possible_duration_long(2 * WEEK as i64).unwrap();
+assert_eq!(value, "14 days") // Max possible period is a day
 ```
 
 ## Supported time strings

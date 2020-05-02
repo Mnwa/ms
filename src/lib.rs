@@ -47,6 +47,14 @@ let value = get_max_possible_duration(DAY as i64).unwrap();
 assert_eq!(value, "1d")
 ```
 
+### Convert milliseconds into long human-like time string without postfix
+```
+use crate::ms_converter::{get_max_possible_duration_long, WEEK};
+
+let value = get_max_possible_duration_long(2 * WEEK as i64).unwrap();
+assert_eq!(value, "14 days") // Max possible period is a day
+```
+
 ## Supported time strings
 * **Years:** `years`, `year`, `yrs`, `yr`, `y`
 * **Weeks:** `weeks`, `week`, `w`
@@ -179,7 +187,7 @@ where
 /// use crate::ms_converter::{get_max_possible_duration, WEEK};
 ///
 /// let value = get_max_possible_duration(2 * WEEK as i64).unwrap();
-/// assert_eq!(value, "14d") // Max possible time is a one week
+/// assert_eq!(value, "14d") // Max possible period is a day
 /// ```
 ///
 /// also you can a pass negative values
@@ -187,7 +195,7 @@ where
 /// use crate::ms_converter::{get_max_possible_duration, WEEK};
 ///
 /// let value = get_max_possible_duration(-2 * WEEK as i64).unwrap();
-/// assert_eq!(value, "-14d") // Max possible time is a one week
+/// assert_eq!(value, "-14d") // Max possible period is a day
 /// ```
 #[inline]
 pub fn get_max_possible_duration(milliseconds: i64) -> Result<String, Error> {
@@ -199,6 +207,58 @@ pub fn get_max_possible_duration(milliseconds: i64) -> Result<String, Error> {
         _ => "ms",
     };
     get_duration_by_postfix(milliseconds, postfix)
+}
+
+/// Getting human-like time from milliseconds.
+/// `get_max_possible_duration_long` function gets a milliseconds count and returns a max possible string with your time.
+/// `get_max_possible_duration_long` **has some limitations** maximum of avalable postfixes is a day.
+///
+/// ### Usage
+/// ```
+/// use crate::ms_converter::{get_max_possible_duration_long, WEEK};
+///
+/// let value = get_max_possible_duration_long(2 * WEEK as i64).unwrap();
+/// assert_eq!(value, "14 days") // Max possible period is a day
+/// ```
+///
+/// ```
+/// use crate::ms_converter::{get_max_possible_duration_long, DAY};
+///
+/// let value = get_max_possible_duration_long(DAY as i64).unwrap();
+/// assert_eq!(value, "1 day")
+/// ```
+///
+/// also you can a pass negative values
+/// ```
+/// use crate::ms_converter::{get_max_possible_duration_long, WEEK};
+///
+/// let value = get_max_possible_duration_long(-2 * WEEK as i64).unwrap();
+/// assert_eq!(value, "-14 days") // Max possible period is a day
+/// ```
+#[inline]
+pub fn get_max_possible_duration_long(milliseconds: i64) -> Result<String, Error> {
+    let postfix = match milliseconds.abs() {
+        m if m >= DAY as i64 => check_postfix(m, DAY, " day", " days"),
+        m if m >= HOUR as i64 => check_postfix(m, HOUR, " hour", " hours"),
+        m if m >= MINUTE as i64 => check_postfix(m, MINUTE, " minute", " minutes"),
+        m if m >= SECOND as i64 => check_postfix(m, SECOND, " second", " seconds"),
+        m => check_postfix(m, 1f64, " millisecond", " milliseconds"),
+    };
+    get_duration_by_postfix(milliseconds, postfix)
+}
+
+#[inline(always)]
+#[doc(hidden)]
+fn check_postfix<'a>(
+    milliseconds: i64,
+    period: f64,
+    postfix: &'a str,
+    postfix_mul: &'a str,
+) -> &'a str {
+    if milliseconds as f64 >= 1.5 * period {
+        return postfix_mul;
+    }
+    postfix
 }
 
 #[inline(always)]

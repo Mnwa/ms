@@ -1,6 +1,6 @@
 use crate::{
-    get_duration_by_postfix, get_max_possible_duration, ms, ms_into_time, parse, DAY, HOUR, MINUTE,
-    SECOND, WEEK, YEAR,
+    get_duration_by_postfix, get_max_possible_duration, get_max_possible_duration_long, ms,
+    ms_into_time, parse, DAY, HOUR, MINUTE, SECOND, WEEK, YEAR,
 };
 use std::string::ToString;
 
@@ -305,4 +305,50 @@ fn get_max_possible_duration_two_weeks() {
 fn get_max_possible_duration_weeks_neg() {
     let value = get_max_possible_duration(-WEEK as i64).unwrap();
     assert_eq!(value, "-7d")
+}
+#[test]
+fn get_max_possible_duration_long_milliseconds() {
+    let value = get_max_possible_duration_long(11 as i64).unwrap();
+    assert_eq!(value, "11 milliseconds")
+}
+
+#[test]
+fn get_max_possible_duration_long_seconds() {
+    let value = get_max_possible_duration_long(12 * SECOND as i64).unwrap();
+    assert_eq!(value, "12 seconds")
+}
+
+#[test]
+fn get_max_possible_duration_long_minutes() {
+    let value = get_max_possible_duration_long(32 * MINUTE as i64).unwrap();
+    assert_eq!(value, "32 minutes")
+}
+
+#[test]
+fn get_max_possible_duration_long_hours() {
+    let value = get_max_possible_duration_long(10 * HOUR as i64).unwrap();
+    assert_eq!(value, "10 hours")
+}
+
+#[test]
+fn get_max_possible_duration_long_day() {
+    let value = get_max_possible_duration_long(DAY as i64).unwrap();
+    assert_eq!(value, "1 day")
+}
+
+#[test]
+fn get_max_possible_duration_long_weeks() {
+    let value = get_max_possible_duration_long(WEEK as i64).unwrap();
+    assert_eq!(value, "7 days")
+}
+#[test]
+fn get_max_possible_duration_long_two_weeks() {
+    let value = get_max_possible_duration_long(2 * WEEK as i64).unwrap();
+    assert_eq!(value, "14 days")
+}
+
+#[test]
+fn get_max_possible_duration_long_weeks_neg() {
+    let value = get_max_possible_duration_long(-WEEK as i64).unwrap();
+    assert_eq!(value, "-7 days")
 }
