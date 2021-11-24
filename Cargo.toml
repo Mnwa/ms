@@ -1,6 +1,6 @@
 [package]
 name = "ms-converter"
-version = "1.4.0"
+version = "1.5.0"
 authors = ["Mnwa <mihan@panfilov.biz>"]
 edition = "2018"
 description = "Fast abstraction for converting human-like times into milliseconds."
@@ -15,3 +15,10 @@ repository = "https://github.com/Mnwa/ms"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "bench"
+harness = false

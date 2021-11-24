@@ -67,9 +67,6 @@ assert_eq!(value, "14 days") // Max possible period is a day
 
 #![doc(issue_tracker_base_url = "https://github.com/Mnwa/ms/issues/")]
 #![doc(html_root_url = "https://docs.rs/ms-converter/")]
-#![no_std]
-
-extern crate std;
 
 use std::borrow::Cow;
 use std::fmt::Formatter;
